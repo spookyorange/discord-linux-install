@@ -14,6 +14,23 @@ cd discord-linux-install
 
 ```
 
+To remove it, run the remove script
+
+```bash
+
+./remove.sh
+
+```
+
+Updates are not handled automatically for now, you can pull the latest version of the script and run it again to update Discord.
+
+```bash
+
+git pull
+./install.sh
+
+```
+
 ### Details
 
 This script will install Discord in the following locations:
