@@ -13,3 +13,23 @@ cd discord-linux-install
 ./install.sh
 
 ```
+
+### Details
+
+This script will install Discord in the following locations:
+
+- /opt/Discord
+- /usr/share/applications/discord.desktop
+- /usr/bin/discord
+
+It will also create a desktop entry for Discord, so you can launch it from your desktop environment's application launcher.
+
+### Tested Distros
+
+- Fedora by Spookyorange
+
+### Contributing
+
+If you have a distro that you would like to add to the list of tested distros, please submit a pull request with the changes you made to the script and the distro you tested it on.
+
+If the version of Discord changes, please submit a pull request with the changes you made to the script and the version of Discord you tested it with. Or if you don't know what to change, open an issue.
