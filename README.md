@@ -8,5 +8,8 @@ To use it, just clone the repo and run the script!
 
 ```bash
 
-git clone
+git clone git@github.com:spookyorange/discord-linux-install.git
+cd discord-linux-install
+./install.sh
+
 ```
