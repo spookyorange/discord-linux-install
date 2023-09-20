@@ -1,6 +1,6 @@
 #!/bin/bash
 
-version=0.0.29
+version=0.0.30
 
 link=https://dl.discordapp.net/apps/linux/$version/discord-$version.tar.gz
 file=discord-$version.tar.gz
