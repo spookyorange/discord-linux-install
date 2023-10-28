@@ -1,6 +1,30 @@
 #!/bin/bash
 
-version=0.0.32
+# this is the place where we get version
+echo "Getting version..."
+
+curl -s -i -o haha https://discord.com/api/download?platform=linux&format=tar.gz
+
+# we sleep for 3 seconds so the file can be created
+sleep 3
+
+# if the file is not created, we exit
+if [ ! -f haha ]; then
+    echo "Make sure you have internet connection and try again."
+    echo "If you have internet connection, please report this issue on GitHub."
+    exit 1
+fi
+
+contents=`cat haha`
+deb_name_from_contents=`echo $contents | grep -Po 'discord-\d+\.\d+\.\d+\.deb'`
+full_name=`echo $deb_name_from_contents | cut -d '-' -f 2`
+just_version=`echo $full_name | cut -d '.' -f 1-3`
+
+echo "Current version: $just_version"
+
+rm haha
+
+version=$just_version
 
 link=https://dl.discordapp.net/apps/linux/$version/discord-$version.tar.gz
 file=discord-$version.tar.gz

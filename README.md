@@ -22,11 +22,10 @@ To remove it, run the remove script
 
 ```
 
-Updates are not handled automatically for now, you can pull the latest version of the script and run it again to update Discord.
+Updates handled automatically now, you can just run the install script and all good!
 
 ```bash
 
-git pull
 ./install.sh
 
 ```
