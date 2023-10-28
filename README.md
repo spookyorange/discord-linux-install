@@ -22,7 +22,7 @@ To remove it, run the remove script
 
 ```
 
-Updates handled automatically now, you can just run the install script and all good!
+Updates are handled automatically now, you can just run the install script and all good!
 
 ```bash
 
