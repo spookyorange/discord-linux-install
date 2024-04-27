@@ -59,6 +59,10 @@ if [ ! -d $general_installation_directory ]; then
   mkdir $general_installation_directory
 fi
 
+if [ ! -d $HOME/.local/bin/ ]; then
+  echo "$HOME/.local/bin not found, creating it for you"
+  mkdir $HOME/.local/bin/
+fi
 
 # Download Discord
 echo "Downloading Discord..."

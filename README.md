@@ -2,6 +2,9 @@
 
 Well, you may just install it using a tarball, no one is stopping you! This script will make it a breeze, usage consists of 3 lines of code for you to execute. Also it has no "sudo" in it, so you may install it without root privileges!
 
+
+This script supports majority of Linux distros which includes but not limited to: Fedora, Fedora Atomic(Silverblue)
+
 ## Usage
 
 To use it, just clone the repo and run the script!
