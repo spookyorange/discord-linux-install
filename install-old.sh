@@ -30,63 +30,68 @@ link=https://dl.discordapp.net/apps/linux/$version/discord-$version.tar.gz
 file=discord-$version.tar.gz
 dir=Discord
 
-
-literal_name_of_installation_directory=".tarball-installations"
-general_installation_directory="$HOME/$literal_name_of_installation_directory"
-bin_file_location="$HOME/.local/bin/discord"
-desktop_file_location="$HOME/.local/share/applications/discord.desktop"
-discord_installation_directory="$general_installation_directory/discord"
-
 echo "Installing Discord..."
-echo "Installation target=$discord_installation_directory"
-sleep 1
+echo "System might ask for your password..."
+echo "It is needed to install Discord on your system, because it downloads it in your /opt folder."
 echo "Version: $version"
-sleep 1
 
 # Delete from opt and usr if Discord is already installed
-if [ -d $bin_file_location ]; then
-  echo "Old bin file detected, removing..."
-  rm $bin_file_location
+if [ -d "/usr/bin/Discord" ]; then
+    echo "Discord is already installed. Removing..."
+    sudo rm -rf /usr/bin/Discord
 fi
 
-if [ -d $discord_installation_directory ]; then
-  echo "Old app files are found, removing..."
-  rm $discord_installation_directory
+if [ -d "/usr/share/discord/Discord" ]; then
+    echo "Discord is already installed. Removing..."
+    sudo rm -rf /usr/share/discord/Discord
 fi
+
+if [ -d "/opt/Discord" ]; then
+    echo "Discord is already installed. Removing..."
+    sudo rm -rf /opt/Discord
+fi
+
 
 # Download Discord
 echo "Downloading Discord..."
 curl -L $link -o $file
 
 # Extract Discord
-echo "Extraction in process.."
+
+echo "Extracting Discord..."
 tar -xvf $file
 
 # Change the code of the desktop so it will see the icon
-echo "Adjusting desktop file to tailor your needs..."
-sed -i "s/Icon=discord/Icon=$HOME\/.tarball-installations\/discord.png/g" $dir/discord.desktop
+echo "Changing the code of the desktop so it will see the icon..."
+sed -i 's/Icon=discord/Icon=\/opt\/Discord\/discord.png/g' $dir/discord.desktop
 
 # Install Discord
-echo "Moving files to your safe directory..."
-mv Discord $discord_installation_directory
+echo "Installing Discord..."
+echo "Moving Discord to /opt..., this might ask for your root password"
+sudo cp -r Discord /opt/Discord
 
 # Create desktop entry
-echo "Copying a personalized desktop entry..."
-cp $discord_installation_directory/discord.desktop $desktop_file_location
+echo "Creating desktop entry..."
+sudo cp -r /opt/Discord/discord.desktop /usr/share/applications
 
 # Create symbolic link
-echo "Creating a bin file for the current user..."
-touch $bin_file_location
-chmod u+x $bin_file_location
-echo "#!/bin/bash
-$discord_installation_directory/Discord" >> $bin_file_location
+echo "Creating symbolic link..."
+# if discord directory doesn't exist, create it
+if [ ! -d "/usr/share/discord" ]; then
+    sudo mkdir /usr/share/discord
+fi
+sudo ln -sf /opt/Discord/Discord /usr/share/discord/Discord
+
+# create symbolic link for users directory
+echo "Creating symbolic link for users directory..."
+sudo ln -sf /opt/Discord /usr/bin/Discord
 
 # Cleanup
 echo "Cleaning up..."
 rm -rf $file
 rm -rf $dir
 
-echo "Installation is successful!"
+echo "Done!"
 
 echo "Discord is now installed on your system, if it does not show up on the menu, restart your DE or log out and log back in."
 

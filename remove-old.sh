@@ -1,3 +1,4 @@
+#!/bin/bash
 
 echo "Removing Discord..."
 sudo rm -rf /usr/bin/Discord
