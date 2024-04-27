@@ -51,7 +51,7 @@ fi
 
 if [ -d $discord_installation_directory ]; then
   echo "Old app files are found, removing..."
-  rm $discord_installation_directory
+  rm -rf $discord_installation_directory
 fi
 
 # Download Discord
@@ -64,7 +64,8 @@ tar -xvf $file
 
 # Change the code of the desktop so it will see the icon
 echo "Adjusting desktop file to tailor your needs..."
-sed -i "s/Icon=discord/Icon=$HOME\/.tarball-installations\/discord.png/g" $dir/discord.desktop
+sed -i "s|Icon=discord|Icon=$discord_installation_directory/discord.png|g" $dir/discord.desktop
+sed -i "s|Exec=/usr/share/discord/Discord|Exec=discord|g" $dir/discord.desktop
 
 # Install Discord
 echo "Moving files to your safe directory..."
