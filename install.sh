@@ -75,7 +75,7 @@ tar -xvf $file
 # Change the code of the desktop so it will see the icon
 echo "Adjusting desktop file to tailor your needs..."
 sed -i "s|Icon=discord|Icon=$discord_installation_directory/discord.png|g" $dir/discord.desktop
-sed -i "s|Exec=/usr/share/discord/Discord|Exec=discord|g" $dir/discord.desktop
+sed -i "s|Exec=/usr/share/discord/Discord|Exec=$discord_installation_directory/Discord|g" $dir/discord.desktop
 
 # Install Discord
 echo "Moving files to your safe directory..."

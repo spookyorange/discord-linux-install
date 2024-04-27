@@ -3,7 +3,7 @@
 Well, you may just install it using a tarball, no one is stopping you! This script will make it a breeze, usage consists of 3 lines of code for you to execute. Also it has no "sudo" in it, so you may install it without root privileges!
 
 
-This script supports majority of Linux distros which includes but not limited to: Fedora, Fedora Atomic(Silverblue)
+This script supports majority of Linux distros(conventional, or Immutable(Atomic in Fedora terms)) which includes but not limited to: Fedora, Fedora Atomic(Silverblue), SteamOS(tested on Steam Deck)
 
 ## Usage
 
@@ -57,6 +57,7 @@ sh ./migrate.sh
 
 - Fedora by Spookyorange
 - Atomic Fedora(Silverblue) by Spookyorange
+- SteamOS(on Steam Deck) by Spookyorange
 
 ### Contributing
 
