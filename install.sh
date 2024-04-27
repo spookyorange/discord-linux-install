@@ -54,6 +54,12 @@ if [ -d $discord_installation_directory ]; then
   rm -rf $discord_installation_directory
 fi
 
+if [ ! -d $general_installation_directory ]; then
+  echo "Creating the $general_installation_directory directory for installation"
+  mkdir $general_installation_directory
+fi
+
+
 # Download Discord
 echo "Downloading Discord..."
 curl -L $link -o $file

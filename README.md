@@ -1,8 +1,8 @@
-# Want to Install Discord but don't use Debian or Ubuntu?
+# Want to Install Discord but can't or won't use your package manager, flatpak, snap etc.?
 
-## Well, have I got a solution for you!
+Well, you may just install it using a tarball, no one is stopping you! This script will make it a breeze, usage consists of 3 lines of code for you to execute. Also it has no "sudo" in it, so you may install it without root privileges!
 
-### This is a script that will install Discord on most Linux distros!
+## Usage
 
 To use it, just clone the repo and run the script!
 
@@ -10,7 +10,7 @@ To use it, just clone the repo and run the script!
 
 git clone https://github.com/spookyorange/discord-linux-install.git
 cd discord-linux-install
-./install.sh
+sh ./install.sh
 
 ```
 
@@ -18,31 +18,42 @@ To remove it, run the remove script
 
 ```bash
 
-./remove.sh
+sh ./uninstall.sh
 
 ```
 
-Updates are handled automatically now, you can just run the install script and all good!
+Updates are handled by running the install script again, you can just run the install script and all good!
 
 ```bash
 
-./install.sh
+sh ./install.sh
 
 ```
 
-### Details
+## Details
 
 This script will install Discord in the following locations:
 
-- /opt/Discord
-- /usr/share/applications/discord.desktop
-- /usr/bin/discord
+- $HOME/.tarball-installations/discord
+- $HOME/.local/bin/discord
+- $HOME/.local/share/applications/discord.desktop
 
 It will also create a desktop entry for Discord, so you can launch it from your desktop environment's application launcher.
+
+## Migration
+
+Just run the migrate script, and the app will now move to local location for your user!
+
+```bash
+
+sh ./migrate.sh
+
+```
 
 ### Tested Distros
 
 - Fedora by Spookyorange
+- Atomic Fedora(Silverblue) by Spookyorange
 
 ### Contributing
 
