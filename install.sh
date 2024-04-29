@@ -30,12 +30,15 @@ link=https://dl.discordapp.net/apps/linux/$version/discord-$version.tar.gz
 file=discord-$version.tar.gz
 dir=Discord
 
-
+app_name=discord
 literal_name_of_installation_directory=".tarball-installations"
 general_installation_directory="$HOME/$literal_name_of_installation_directory"
-bin_file_location="$HOME/.local/bin/discord"
-desktop_file_location="$HOME/.local/share/applications/discord.desktop"
 discord_installation_directory="$general_installation_directory/discord"
+local_bin_path="$HOME/.local/bin"
+local_application_path="$HOME/.local/share/applications"
+app_bin_in_local_bin="$local_bin_path/$app_name"
+desktop_in_local_applications="$local_application_path/$app_name.desktop"
+
 
 echo "Installing Discord..."
 echo "Installation target=$discord_installation_directory"
@@ -44,9 +47,9 @@ echo "Version: $version"
 sleep 1
 
 # Delete from opt and usr if Discord is already installed
-if [ -d $bin_file_location ]; then
+if [ -f $app_bin_in_local_bin ]; then
   echo "Old bin file detected, removing..."
-  rm $bin_file_location
+  rm $app_bin_in_local_bin
 fi
 
 if [ -d $discord_installation_directory ]; then
@@ -54,14 +57,19 @@ if [ -d $discord_installation_directory ]; then
   rm -rf $discord_installation_directory
 fi
 
+if [ -f $desktop_in_local_applications ]; then
+  echo "Old bin file detected, removing..."
+  rm $desktop_in_local_applications
+fi
+
 if [ ! -d $general_installation_directory ]; then
   echo "Creating the $general_installation_directory directory for installation"
   mkdir $general_installation_directory
 fi
 
-if [ ! -d $HOME/.local/bin/ ]; then
-  echo "$HOME/.local/bin not found, creating it for you"
-  mkdir $HOME/.local/bin/
+if [ ! -d $local_bin_path ]; then
+  echo "$local_bin_path not found, creating it for you"
+  mkdir $local_bin_path
 fi
 
 # Download Discord
@@ -83,14 +91,14 @@ mv Discord $discord_installation_directory
 
 # Create desktop entry
 echo "Copying a personalized desktop entry..."
-cp $discord_installation_directory/discord.desktop $desktop_file_location
+cp $discord_installation_directory/discord.desktop $desktop_in_local_applications
 
 # Create symbolic link
 echo "Creating a bin file for the current user..."
-touch $bin_file_location
-chmod u+x $bin_file_location
+touch $app_bin_in_local_bin
+chmod u+x $app_bin_in_local_bin
 echo "#!/bin/bash
-$discord_installation_directory/Discord" >> $bin_file_location
+$discord_installation_directory/Discord" >> $app_bin_in_local_bin
 
 # Cleanup
 echo "Cleaning up..."
