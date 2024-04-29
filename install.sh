@@ -33,7 +33,7 @@ dir=Discord
 app_name=discord
 literal_name_of_installation_directory=".tarball-installations"
 general_installation_directory="$HOME/$literal_name_of_installation_directory"
-discord_installation_directory="$general_installation_directory/discord"
+app_installation_directory="$general_installation_directory/discord"
 local_bin_path="$HOME/.local/bin"
 local_application_path="$HOME/.local/share/applications"
 app_bin_in_local_bin="$local_bin_path/$app_name"
@@ -41,7 +41,7 @@ desktop_in_local_applications="$local_application_path/$app_name.desktop"
 
 
 echo "Installing Discord..."
-echo "Installation target=$discord_installation_directory"
+echo "Installation target=$app_installation_directory"
 sleep 1
 echo "Version: $version"
 sleep 1
@@ -52,9 +52,9 @@ if [ -f $app_bin_in_local_bin ]; then
   rm $app_bin_in_local_bin
 fi
 
-if [ -d $discord_installation_directory ]; then
+if [ -d $app_installation_directory ]; then
   echo "Old app files are found, removing..."
-  rm -rf $discord_installation_directory
+  rm -rf $app_installation_directory
 fi
 
 if [ -f $desktop_in_local_applications ]; then
@@ -82,23 +82,23 @@ tar -xvf $file
 
 # Change the code of the desktop so it will see the icon
 echo "Adjusting desktop file to tailor your needs..."
-sed -i "s|Icon=discord|Icon=$discord_installation_directory/discord.png|g" $dir/discord.desktop
-sed -i "s|Exec=/usr/share/discord/Discord|Exec=$discord_installation_directory/Discord|g" $dir/discord.desktop
+sed -i "s|Icon=discord|Icon=$app_installation_directory/discord.png|g" $dir/discord.desktop
+sed -i "s|Exec=/usr/share/discord/Discord|Exec=$app_installation_directory/Discord|g" $dir/discord.desktop
 
 # Install Discord
 echo "Moving files to your safe directory..."
-mv Discord $discord_installation_directory
+mv Discord $app_installation_directory
 
 # Create desktop entry
 echo "Copying a personalized desktop entry..."
-cp $discord_installation_directory/discord.desktop $desktop_in_local_applications
+cp $app_installation_directory/discord.desktop $desktop_in_local_applications
 
 # Create symbolic link
 echo "Creating a bin file for the current user..."
 touch $app_bin_in_local_bin
 chmod u+x $app_bin_in_local_bin
 echo "#!/bin/bash
-$discord_installation_directory/Discord" >> $app_bin_in_local_bin
+$app_installation_directory/Discord" >> $app_bin_in_local_bin
 
 # Cleanup
 echo "Cleaning up..."
