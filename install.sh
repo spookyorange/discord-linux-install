@@ -38,6 +38,8 @@ local_bin_path="$HOME/.local/bin"
 local_application_path="$HOME/.local/share/applications"
 app_bin_in_local_bin="$local_bin_path/$app_name"
 desktop_in_local_applications="$local_application_path/$app_name.desktop"
+icon_path=$app_installation_directory/discord.png
+executable_path=$app_installation_directory/Discord
 
 
 echo "Installing Discord..."
@@ -82,8 +84,8 @@ tar -xvf $file
 
 # Change the code of the desktop so it will see the icon
 echo "Adjusting desktop file to tailor your needs..."
-sed -i "s|Icon=discord|Icon=$app_installation_directory/discord.png|g" $dir/discord.desktop
-sed -i "s|Exec=/usr/share/discord/Discord|Exec=$app_installation_directory/Discord|g" $dir/discord.desktop
+sed -i "s|Icon=discord|Icon=$icon_path|g" $dir/discord.desktop
+sed -i "s|Exec=/usr/share/discord/Discord|Exec=$executable_path|g" $dir/discord.desktop
 
 # Install Discord
 echo "Moving files to your safe directory..."
@@ -98,7 +100,7 @@ echo "Creating a bin file for the current user..."
 touch $app_bin_in_local_bin
 chmod u+x $app_bin_in_local_bin
 echo "#!/bin/bash
-$app_installation_directory/Discord" >> $app_bin_in_local_bin
+$executable_path" >> $app_bin_in_local_bin
 
 # Cleanup
 echo "Cleaning up..."
