@@ -74,6 +74,11 @@ if [ ! -d $local_bin_path ]; then
   mkdir $local_bin_path
 fi
 
+if [ ! -d $local_application_path]; then
+  echo "$local_application_path not found, creating it for you"
+  mkdir $local_application_path
+fi
+
 # Download Discord
 echo "Downloading Discord..."
 curl -L $link -o $file
