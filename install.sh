@@ -82,6 +82,12 @@ fi
 # Download Discord
 echo "Downloading Discord..."
 curl -L $link -o $file
+if [ $? -eq 0 ]; then
+    echo OK
+else
+    echo "Installation failed. Curl not found or not installed"
+    exit
+fi
 
 # Extract Discord
 echo "Extraction in process.."
