@@ -38,8 +38,8 @@ case $version_selection in
     executable_name=DiscordPTB
     ;;
   '')
-    version_name_with_slash=""
     echo "Standard version selected"
+    version_name_with_slash=""
 
     app_name=discord
     executable_name=Discord
