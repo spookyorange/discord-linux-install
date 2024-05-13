@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 literal_name_of_installation_directory=".tarball-installations"
 general_installation_directory="$HOME/$literal_name_of_installation_directory"
