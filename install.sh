@@ -1,51 +1,68 @@
 #!/bin/bash
 
-# this is the place where we get version
-echo "Getting version..."
-
-curl -s -i -o haha https://discord.com/api/download?platform=linux&format=tar.gz
-
-# we sleep for 3 seconds so the file can be created
-sleep 3
-
-# if the file is not created, we exit
-if [ ! -f haha ]; then
-    echo "Make sure you have internet connection and try again."
-    echo "If you have internet connection, please report this issue on GitHub."
-    exit 1
-fi
-
-contents=`cat haha`
-deb_name_from_contents=`echo $contents | grep -Po 'discord-\d+\.\d+\.\d+\.deb'`
-full_name=`echo $deb_name_from_contents | cut -d '-' -f 2`
-just_version=`echo $full_name | cut -d '.' -f 1-3`
-
-echo "Current version: $just_version"
-
-rm haha
-
-version=$just_version
-
-link=https://dl.discordapp.net/apps/linux/$version/discord-$version.tar.gz
-file=discord-$version.tar.gz
-dir=Discord
-
-app_name=discord
 literal_name_of_installation_directory=".tarball-installations"
 general_installation_directory="$HOME/$literal_name_of_installation_directory"
-app_installation_directory="$general_installation_directory/discord"
 local_bin_path="$HOME/.local/bin"
 local_application_path="$HOME/.local/share/applications"
+tar_location=$(mktemp /tmp/discord.XXXXXX.tar.gz)
+
+echo "Hello there, please select your version: 1, 2 or 3, return for recommended version."
+echo "1 for Standard version(recommended) => default"
+echo "2 for Canary version"
+echo "3 for PTB version"
+
+read version_selection
+
+echo $version_selection
+
+case $version_selection in
+  '1')
+    echo "Standard version selected"
+    version_name_with_slash=""
+
+    app_name=discord
+    executable_name=Discord
+    ;;
+  '2')
+    echo "Canary version selected"
+    version_name_with_slash="/canary"
+
+    app_name=discord-canary
+    executable_name=DiscordCanary
+    ;;
+  '3')
+    echo "PTB version selected"
+    version_name_with_slash="/ptb"
+
+    app_name=discord-ptb
+    executable_name=DiscordPTB
+    ;;
+  '')
+    version_name_with_slash=""
+    echo "Standard version selected"
+
+    app_name=discord
+    executable_name=Discord
+    ;;
+  *)
+    echo "Please run it again and select a valid option"
+    exit 1
+    ;;
+esac
+
+app_installation_directory="$general_installation_directory/$app_name"
 app_bin_in_local_bin="$local_bin_path/$app_name"
 desktop_in_local_applications="$local_application_path/$app_name.desktop"
 icon_path=$app_installation_directory/discord.png
-executable_path=$app_installation_directory/Discord
+executable_path=$app_installation_directory/$executable_name
+
+link="https://discord.com/api$version_name_with_slash/download?platform=linux&format=tar.gz"
+file=discord-$version.tar.gz
+dir=Discord
 
 
 echo "Installing Discord..."
 echo "Installation target=$app_installation_directory"
-sleep 1
-echo "Version: $version"
 sleep 1
 
 # Delete from opt and usr if Discord is already installed
@@ -81,7 +98,7 @@ fi
 
 # Download Discord
 echo "Downloading Discord..."
-curl -L $link -o $file
+curl -L $link -o $tar_location
 if [ $? -eq 0 ]; then
     echo OK
 else
@@ -91,20 +108,24 @@ fi
 
 # Extract Discord
 echo "Extraction in process.."
-tar -xvf $file
+
+mkdir $app_name
+tar -xvf $tar_location -C $app_name --strip-components=1
+
+current_desktop_path="$app_name/$app_name.desktop"
 
 # Change the code of the desktop so it will see the icon
 echo "Adjusting desktop file to tailor your needs..."
-sed -i "s|Icon=discord|Icon=$icon_path|g" $dir/discord.desktop
-sed -i "s|Exec=/usr/share/discord/Discord|Exec=$executable_path|g" $dir/discord.desktop
+sed -i "s|Icon=$app_name|Icon=$icon_path|g" $current_desktop_path
+sed -i "s|Exec=/usr/share/$app_name/$executable_name|Exec=$executable_path|g" $current_desktop_path
 
 # Install Discord
 echo "Moving files to your safe directory..."
-mv Discord $app_installation_directory
+mv $app_name $app_installation_directory
 
 # Create desktop entry
 echo "Copying a personalized desktop entry..."
-cp $app_installation_directory/discord.desktop $desktop_in_local_applications
+cp $app_installation_directory/$app_name.desktop $desktop_in_local_applications
 
 # Create symbolic link
 echo "Creating a bin file for the current user..."
@@ -115,7 +136,7 @@ $executable_path" >> $app_bin_in_local_bin
 
 # Cleanup
 echo "Cleaning up..."
-rm -rf $file
+rm $tar_location
 rm -rf $dir
 
 echo "Installation is successful!"
