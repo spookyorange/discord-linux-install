@@ -1,0 +1,144 @@
+!![script]!!
+
+!!![basic_info]!!!
+title: Install Discord
+script_description: This one installs Discord, and does it beautifully!
++++[basic_info]+++
+
+!!![whole_script]!!!
+#!/usr/bin/env bash
+
+literal_name_of_installation_directory="###installation_directory###"
+general_installation_directory="$HOME/$literal_name_of_installation_directory"
+local_bin_path="$HOME/.local/bin"
+local_application_path="$HOME/.local/share/applications"
+tar_location=$(mktemp /tmp/discord.XXXXXX.tar.gz)
+
+version_name_with_slash=###version_name_with_slash###
+app_name=###app_name###
+executable_name=###executable_name###
+
+echo ###version_specific_greet###
+
+app_installation_directory="$general_installation_directory/$app_name"
+app_bin_in_local_bin="$local_bin_path/$app_name"
+desktop_in_local_applications="$local_application_path/$app_name.desktop"
+icon_path=$app_installation_directory/discord.png
+executable_path=$app_installation_directory/$executable_name
+
+link="https://discord.com/api$version_name_with_slash/download?platform=linux&format=tar.gz"
+file=discord-$version.tar.gz
+dir=Discord
+
+
+echo "Installing Discord..."
+echo "Installation target=$app_installation_directory"
+sleep 1
+
+# Delete from opt and usr if Discord is already installed
+if [ -f $app_bin_in_local_bin ]; then
+  echo "Old bin file detected, removing..."
+  rm $app_bin_in_local_bin
+fi
+
+if [ -d $app_installation_directory ]; then
+  echo "Old app files are found, removing..."
+  rm -rf $app_installation_directory
+fi
+
+if [ -f $desktop_in_local_applications ]; then
+  echo "Old bin file detected, removing..."
+  rm $desktop_in_local_applications
+fi
+
+if [ ! -d $general_installation_directory ]; then
+  echo "Creating the $general_installation_directory directory for installation"
+  mkdir $general_installation_directory
+fi
+
+if [ ! -d $local_bin_path ]; then
+  echo "$local_bin_path not found, creating it for you"
+  mkdir $local_bin_path
+fi
+
+if [ ! -d $local_application_path ]; then
+  echo "$local_application_path not found, creating it for you"
+  mkdir $local_application_path
+fi
+
+# Download Discord
+echo "Downloading Discord..."
+curl -L $link -o $tar_location
+if [ $? -eq 0 ]; then
+    echo OK
+else
+    echo "Installation failed. Curl not found or not installed"
+    exit
+fi
+
+# Extract Discord
+echo "Extraction in process.."
+
+mkdir $app_name
+tar -xvf $tar_location -C $app_name --strip-components=1
+
+current_desktop_path="$app_name/$app_name.desktop"
+
+# Change the code of the desktop so it will see the icon
+echo "Adjusting desktop file to tailor your needs..."
+sed -i "s|Icon=$app_name|Icon=$icon_path|g" $current_desktop_path
+sed -i "s|Exec=/usr/share/$app_name/$executable_name|Exec=$executable_path|g" $current_desktop_path
+
+# Install Discord
+echo "Moving files to your safe directory..."
+mv $app_name $app_installation_directory
+
+# Create desktop entry
+echo "Copying a personalized desktop entry..."
+cp $app_installation_directory/$app_name.desktop $desktop_in_local_applications
+
+# Create symbolic link
+echo "Creating a bin file for the current user..."
+touch $app_bin_in_local_bin
+chmod u+x $app_bin_in_local_bin
+echo "#!/bin/bash
+$executable_path" >> $app_bin_in_local_bin
+
+# Cleanup
+echo "Cleaning up..."
+rm $tar_location
+rm -rf $dir
+
+echo "Installation is successful!"
+
+echo "Discord is now installed on your system, if it does not show up on the menu, restart your DE or log out and log back in."
+
+sleep 3
+
+echo "Have fun!"
+
+sleep 2
+
+exit 0
++++[whole_script]+++
+
+!!![loadouts]!!!
+
+!!!![loadout]!!!!
+title: Default
+variables: installation_directory => .tarball-installations,,,version_name_with_slash => "",,,app_name => discord,,,executable_name => Discord,,,version_specific_greet => Vanilla, nice choice!,,,
+++++[loadout]++++
+
+!!!![loadout]!!!!
+title: Canary
+variables: installation_directory => .tarball-installations,,,version_name_with_slash => "/canary",,,app_name => discord-canary,,,executable_name => DiscordCanary,,,version_specific_greet => Canary, fancy!,,,
+++++[loadout]++++
+
+!!!![loadout]!!!!
+title: PTB
+variables: installation_directory => .tarball-installations,,,version_name_with_slash => "/ptb",,,app_name => discord-ptb,,,executable_name => DiscordPTB,,,version_specific_greet => PTB, welcome to the testing realm!,,,
+++++[loadout]++++
+
++++[loadouts]+++
+
+++[script]++
