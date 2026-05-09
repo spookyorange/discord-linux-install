@@ -53,7 +53,8 @@ esac
 app_installation_directory="$general_installation_directory/$app_name"
 app_bin_in_local_bin="$local_bin_path/$app_name"
 desktop_in_local_applications="$local_application_path/$app_name.desktop"
-icon_path=$app_installation_directory/discord.png
+app_icon_name="discord.png"
+icon_path="$HOME/icons/$app_icon_name"
 executable_path=$app_installation_directory/$executable_name
 updater_bootstrap_path=$app_installation_directory/updater_bootstrap
 
@@ -61,6 +62,7 @@ echo "Uninstalling Discord from your system..."
 rm $desktop_in_local_applications
 rm $app_bin_in_local_bin
 rm $updater_bootstrap_path
+rm $icon_path
 rm -rf $app_installation_directory
 
 echo "Uninstallation is complete!"
