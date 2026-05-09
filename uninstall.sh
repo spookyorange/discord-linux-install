@@ -21,28 +21,28 @@ case $version_selection in
     version_name_with_slash=""
 
     app_name=discord
-    executable_name=Discord
+    executable_name=discord
     ;;
   '2')
     echo "Canary version selected"
     version_name_with_slash="/canary"
 
     app_name=discord-canary
-    executable_name=DiscordCanary
+    executable_name=discord-canary
     ;;
   '3')
     echo "PTB version selected"
     version_name_with_slash="/ptb"
 
     app_name=discord-ptb
-    executable_name=DiscordPTB
+    executable_name=discord-ptb
     ;;
   '')
     echo "Standard version selected"
     version_name_with_slash=""
 
     app_name=discord
-    executable_name=Discord
+    executable_name=discord
     ;;
   *)
     echo "Please run it again and select a valid option"
@@ -53,12 +53,16 @@ esac
 app_installation_directory="$general_installation_directory/$app_name"
 app_bin_in_local_bin="$local_bin_path/$app_name"
 desktop_in_local_applications="$local_application_path/$app_name.desktop"
-icon_path=$app_installation_directory/discord.png
+app_icon_name="discord.png"
+icon_path="$HOME/icons/$app_icon_name"
 executable_path=$app_installation_directory/$executable_name
+updater_bootstrap_path=$app_installation_directory/updater_bootstrap
 
 echo "Uninstalling Discord from your system..."
 rm $desktop_in_local_applications
 rm $app_bin_in_local_bin
+rm $updater_bootstrap_path
+rm $icon_path
 rm -rf $app_installation_directory
 
 echo "Uninstallation is complete!"
