@@ -4,6 +4,7 @@ literal_name_of_installation_directory=".tarball-installations"
 general_installation_directory="$HOME/$literal_name_of_installation_directory"
 local_bin_path="$HOME/.local/bin"
 local_application_path="$HOME/.local/share/applications"
+local_icons_path="$HOME/icons"
 tar_location=$(mktemp /tmp/discord.XXXXXX.tar.gz)
 
 echo "Hello there, please select your version: 1, 2 or 3, return for recommended version."
@@ -21,28 +22,28 @@ case $version_selection in
     version_name_with_slash=""
 
     app_name=discord
-    executable_name=Discord
+    executable_name=discord
     ;;
   '2')
     echo "Canary version selected"
     version_name_with_slash="/canary"
 
     app_name=discord-canary
-    executable_name=DiscordCanary
+    executable_name=discord-canary
     ;;
   '3')
     echo "PTB version selected"
     version_name_with_slash="/ptb"
 
     app_name=discord-ptb
-    executable_name=DiscordPTB
+    executable_name=discord-ptb
     ;;
   '')
     echo "Standard version selected"
     version_name_with_slash=""
 
     app_name=discord
-    executable_name=Discord
+    executable_name=discord
     ;;
   *)
     echo "Please run it again and select a valid option"
@@ -52,9 +53,13 @@ esac
 
 app_installation_directory="$general_installation_directory/$app_name"
 app_bin_in_local_bin="$local_bin_path/$app_name"
+updater_bootstrap_bin_in_local_bin="$local_bin_path/updater_bootstrap"
 desktop_in_local_applications="$local_application_path/$app_name.desktop"
-icon_path=$app_installation_directory/discord.png
+app_icon_name="discord.png"
+icon_path="$HOME/icons/$app_icon_name"
 executable_path=$app_installation_directory/$executable_name
+updater_bootstrap_path=$app_installation_directory/updater_bootstrap
+postinst_sh_path_in_local_dir=$app_installation_directory/postinst.sh
 
 link="https://discord.com/api$version_name_with_slash/download?platform=linux&format=tar.gz"
 file=discord-$version.tar.gz
@@ -70,6 +75,12 @@ if [ -f $app_bin_in_local_bin ]; then
   echo "Old bin file detected, removing..."
   rm $app_bin_in_local_bin
 fi
+
+if [ -f $updater_bootstrap_bin_in_local_bin ]; then
+  echo "Old updater bootstrap bin file detected, removing..."
+  rm $updater_bootstrap_bin_in_local_bin
+fi
+
 
 if [ -d $app_installation_directory ]; then
   echo "Old app files are found, removing..."
@@ -89,6 +100,11 @@ fi
 if [ ! -d $local_bin_path ]; then
   echo "$local_bin_path not found, creating it for you"
   mkdir $local_bin_path
+fi
+
+if [ ! -d $local_icons_path ]; then
+  echo "$local_icons_path not found, creating it for you"
+  mkdir $local_icons_path
 fi
 
 if [ ! -d $local_application_path ]; then
@@ -116,8 +132,9 @@ current_desktop_path="$app_name/$app_name.desktop"
 
 # Change the code of the desktop so it will see the icon
 echo "Adjusting desktop file to tailor your needs..."
+sed -i "s|Exec=/usr/bin/$executable_name|Exec=$app_bin_in_local_bin|g" $current_desktop_path
+sed -i "s|Path=/usr/bin|Path=$local_bin_path|g" $current_desktop_path
 sed -i "s|Icon=$app_name|Icon=$icon_path|g" $current_desktop_path
-sed -i "s|Exec=/usr/share/$app_name/$executable_name|Exec=$executable_path|g" $current_desktop_path
 
 # Install Discord
 echo "Moving files to your safe directory..."
@@ -125,14 +142,23 @@ mv $app_name $app_installation_directory
 
 # Create desktop entry
 echo "Copying a personalized desktop entry..."
+cp $app_installation_directory/$app_icon_name $icon_path
 cp $app_installation_directory/$app_name.desktop $desktop_in_local_applications
 
-# Create symbolic link
-echo "Creating a bin file for the current user..."
-touch $app_bin_in_local_bin
-chmod u+x $app_bin_in_local_bin
-echo "#!/bin/bash
-$executable_path" >> $app_bin_in_local_bin
+echo "Copying the bin files..."
+cp $executable_path $app_bin_in_local_bin
+cp $updater_bootstrap_path $updater_bootstrap_bin_in_local_bin
+
+echo "------------------------------"
+echo "------------------------------"
+echo "------------------------------"
+echo "There is a postinst.sh that was included with the package"
+echo "It is not being ran by this script for it is strictly non root available"
+echo "You can run the code below to easily run it yourself"
+echo "sh $postinst_sh_path_in_local_dir"
+echo "------------------------------"
+echo "------------------------------"
+echo "------------------------------"
 
 # Cleanup
 echo "Cleaning up..."
