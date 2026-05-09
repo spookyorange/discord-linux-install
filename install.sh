@@ -23,6 +23,7 @@ case $version_selection in
 
     app_name=discord
     executable_name=discord
+    old_executable_name=Discord
     ;;
   '2')
     echo "Canary version selected"
@@ -30,6 +31,7 @@ case $version_selection in
 
     app_name=discord-canary
     executable_name=discord-canary
+    old_executable_name=DiscordCanary
     ;;
   '3')
     echo "PTB version selected"
@@ -37,6 +39,7 @@ case $version_selection in
 
     app_name=discord-ptb
     executable_name=discord-ptb
+    old_executable_name=DiscordPTB
     ;;
   '')
     echo "Standard version selected"
@@ -44,6 +47,7 @@ case $version_selection in
 
     app_name=discord
     executable_name=discord
+    old_executable_name=Discord
     ;;
   *)
     echo "Please run it again and select a valid option"
@@ -60,6 +64,7 @@ icon_path="$HOME/icons/$app_icon_name"
 executable_path=$app_installation_directory/$executable_name
 updater_bootstrap_path=$app_installation_directory/updater_bootstrap
 postinst_sh_path_in_local_dir=$app_installation_directory/postinst.sh
+old_executable_binary_path_to_maybe_delete="$local_bin_path/$old_executable_name"
 
 link="https://discord.com/api$version_name_with_slash/download?platform=linux&format=tar.gz"
 file=discord-$version.tar.gz
@@ -90,6 +95,11 @@ fi
 if [ -f $desktop_in_local_applications ]; then
   echo "Old bin file detected, removing..."
   rm $desktop_in_local_applications
+fi
+
+if [ -f $old_executable_binary_path_to_maybe_delete ]; then
+  echo "Old bin from older installation detected, removing..."
+  rm $old_executable_binary_path_to_maybe_delete
 fi
 
 if [ ! -d $general_installation_directory ]; then

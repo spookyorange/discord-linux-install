@@ -22,6 +22,7 @@ case $version_selection in
 
     app_name=discord
     executable_name=discord
+    old_executable_name=Discord
     ;;
   '2')
     echo "Canary version selected"
@@ -29,6 +30,7 @@ case $version_selection in
 
     app_name=discord-canary
     executable_name=discord-canary
+    old_executable_name=DiscordCanary
     ;;
   '3')
     echo "PTB version selected"
@@ -36,6 +38,7 @@ case $version_selection in
 
     app_name=discord-ptb
     executable_name=discord-ptb
+    old_executable_name=DiscordPTB
     ;;
   '')
     echo "Standard version selected"
@@ -43,6 +46,7 @@ case $version_selection in
 
     app_name=discord
     executable_name=discord
+    old_executable_name=Discord
     ;;
   *)
     echo "Please run it again and select a valid option"
@@ -56,6 +60,7 @@ desktop_in_local_applications="$local_application_path/$app_name.desktop"
 app_icon_name="discord.png"
 icon_path="$HOME/icons/$app_icon_name"
 executable_path=$app_installation_directory/$executable_name
+old_bin_path=$local_bin_path/$old_executable_name
 updater_bootstrap_path=$app_installation_directory/updater_bootstrap
 
 echo "Uninstalling Discord from your system..."
@@ -64,6 +69,11 @@ rm $app_bin_in_local_bin
 rm $updater_bootstrap_path
 rm $icon_path
 rm -rf $app_installation_directory
+
+if [ -f $old_bin_path ]; then
+  echo "Found old bin file(likely from this script's older versions), nuking"
+  rm $old_bin_path
+fi
 
 echo "Uninstallation is complete!"
 
